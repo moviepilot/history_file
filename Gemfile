@@ -8,7 +8,17 @@ source "http://rubygems.org"
 group :development do
   gem "shoulda", ">= 0"
   gem "rdoc", "~> 3.12"
-  gem "bundler", "~> 1.0.0"
+  gem "bundler"
   gem "jeweler", "~> 1.8.4"
-  gem "rcov", ">= 0"
+  gem "simplecov", ">= 0"
+end
+group :development, :test do
+  gem 'webmock'
+  gem 'rspec'
+  gem 'terminal-notifier'
+  gem 'guard'
+  gem 'guard-rspec'
+  gem 'guard-bundler'
+  gem 'guard-yard'
+  gem 'guard-spork'
 end
