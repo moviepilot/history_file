@@ -21,4 +21,5 @@ group :development, :test do
   gem 'guard-bundler'
   gem 'guard-yard'
   gem 'guard-spork'
+  gem 'rb-fsevent'
 end
