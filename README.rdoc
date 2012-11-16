@@ -19,14 +19,14 @@ If a file for a given date is not available, {HistoryFile} falls
 back to the freshest file that is older than the given date.
 
 ```ruby
-> f = HistoryFile[3.days.ago].new("test.txt", "w")
-=> #<File:./2012.11.12-test.txt>
-> f.write("I am old")
-=> 8
-> f.close
-=> nil
-> HistoryFile[Date.today].read("test.txt")
-=> "I am old"
-> HistoryFile[10.days.ago].read("test.txt")
-Errno::ENOENT: No such file or directory - ./2012.11.05-test.txt
+    > f = HistoryFile[3.days.ago].new("test.txt", "w")
+    => #<File:./2012.11.12-test.txt>
+    > f.write("I am old")
+    => 8
+    > f.close
+    => nil
+    > HistoryFile[Date.today].read("test.txt")
+    => "I am old"
+    > HistoryFile[10.days.ago].read("test.txt")
+    Errno::ENOENT: No such file or directory - ./2012.11.05-test.txt
 ```
