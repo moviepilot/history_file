@@ -2,9 +2,12 @@ HistoryFile
 ===========
 
 Behaves like a `File` class and does some convenience stuff
-around a `HistoryFile::FileDelegator` instance. It all
-revolves about defining a time offset. If however, you want
-to access different versions of a file, use it like this:
+around a `HistoryFile::FileDelegator` instance. It lets you 
+version files by dates. A date prefix is added to the file
+name.
+
+If you want to write a file to store data from yesterday, 
+you could write:
 
 ```ruby
 > f = HistoryFile[1.day.ago].new("/tmp/foo.txt", "w")
@@ -35,12 +38,20 @@ an `Errno::ENOENT` is thrown.
 
 Methods that patch all arguments with a date prefix
 ---------------------------------------------------
+You can pass an arbitrary amount of arguments to these methods,
+but all of them are file names. So we'll go ahead and prefix all
+of them:
+
 - `delete`
 - `unlink`
 - `safe_unlink`
 
 Methods that patch nothing and just delegate to File
 ----------------------------------------------------
+These are mostly methods that are either not `HistoryFile` specific
+(i.e. `File.join` to join components with the OS dependant path 
+separator) or where one can't dumbly prefix filenames. 
+
 - `absolute_path`
 - `basename`
 - `catname`
