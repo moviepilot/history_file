@@ -1,8 +1,8 @@
 HistoryFile
 ===========
 
-Behaves like a {File} class and does some convenience stuff
-around a {HistoryFile::FileDelegator} instance. It all
+Behaves like a `File` class and does some convenience stuff
+around a `HistoryFile::FileDelegator` instance. It all
 revolves about defining a time offset. If however, you want
 to access different versions of a file, use it like this:
 
@@ -11,11 +11,11 @@ to access different versions of a file, use it like this:
 => #<File:/tmp/2012.11.02-foo.txt>
 ```
 
-The returned {HistoryFile::FileDelegator} object supports all
+The returned `HistoryFile::FileDelegator` object supports all
 methods that File has, but adds a date prefix to those methods
 that revolve around a single file (reading, writing, etc.)
 
-If a file for a given date is not available, {HistoryFile} falls
+If a file for a given date is not available, `HistoryFile` falls
 back to the freshest file that is older than the given date.
 
 ```ruby
@@ -30,3 +30,45 @@ back to the freshest file that is older than the given date.
 > HistoryFile[10.days.ago].read("test.txt")
 Errno::ENOENT: No such file or directory - ./2012.11.05-test.txt
 ```
+It does this for every method where a prefix is added and when
+an `Errno::ENOENT` is thrown.
+
+Methods that patch all arguments with a date prefix
+---------------------------------------------------
+- `delete`
+- `unlink`
+- `safe_unlink`
+
+Methods that patch nothing and just delegate to File
+----------------------------------------------------
+- `absolute_path`
+- `basename`
+- `catname`
+- `chmod`
+- `chown`
+- `compare`
+- `copy`
+- `directory?`
+- `dirname`
+- `expand_path`
+- `extname`
+- `fnmatch`
+- `fnmatch?`
+- `identical?`
+- `install`
+- `join`
+- `lchown`
+- `link`
+- `makedirs`
+- `move`
+- `path`
+- `realdirpath`
+- `realpath`
+- `rename`
+- `split`
+- `umask`
+- `utime`
+
+Methods that add a prefix to the filename
+-----------------------------------------
+All other methods
