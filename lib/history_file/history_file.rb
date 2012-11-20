@@ -30,7 +30,7 @@ module HistoryFile
   def self.[](offset)
     validate_offset(offset)
     fallback_glob = "[0-9][0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]-"
-    FileDelegator.new(prefix(offset), fallback_glob: fallback_glob)
+    FileDelegator.new(prefix: prefix(offset), fallback_glob: fallback_glob)
   end
 
   private
