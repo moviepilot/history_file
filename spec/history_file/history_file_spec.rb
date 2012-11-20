@@ -43,6 +43,19 @@ describe HistoryFile::FileDelegator do
   end
 
   context "prefixing with sub directories" do
+    let(:sdfd){ HistoryFile::FileDelegator.new(prefix: "some_prefix", use_subdirectories: true) }
+
+    it "creates the right filename with a directory as a prefix" do
+      sdfd.prefixed_filename('test').should == "./some_prefix/test"
+    end
+
+    it "attempts to create a directory" do
+      File.should_receive(:mkdir).with("./some_prefix")
+      File.should_receive(:open).with("./some_prefix/foo")
+      sdfd.open("foo") do |io|
+        io.write "don't"
+      end
+    end
 
   end
 end
