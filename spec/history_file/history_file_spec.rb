@@ -3,11 +3,17 @@ require 'date'
 
 describe HistoryFile::FileDelegator do
 
-  let(:fd){ HistoryFile::FileDelegator.new("some_prefix") }
-
   context "prefixing the filename" do
+    let(:fd){ HistoryFile::FileDelegator.new(prefix: "some_prefix") }
+
     after(:all) do
       File.unlink("some_prefix-rspec_tmp_test.txt") rescue nil
+    end
+
+    it "raises an exception if a :prefix is missing" do
+      expect{
+        HistoryFile::FileDelegator.new({})
+      }.to raise_error(ArgumentError, ":prefix needed")
     end
 
     it "delegates generic methods to File directly" do

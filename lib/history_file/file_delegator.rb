@@ -71,8 +71,8 @@ module HistoryFile
     #   smaller file on Errno::ENOENT, you can supply a :fallback_glob here. It
     #   will be used with `Dir.glob` to find all candidates (so this should match
     #   all prefixes)
-    def initialize(prefix, opts = {})
-      @prefix = prefix
+    def initialize(opts)
+      @prefix = opts[:prefix] or raise ArgumentError,":prefix needed"
       @fallback_glob = opts[:fallback_glob]
       @subdir = opts[:use_subdirectories]
     end
