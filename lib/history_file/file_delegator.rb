@@ -65,6 +65,11 @@ module HistoryFile
       :safe_unlink
     ]
 
+    WRITING_METHODS = [
+      :new,
+      :open
+    ]
+
     # @param prefix [String] The prefix for all methods that revolve around
     #   filenames
     # @param fallback_glob [Hash] If you want to fall back to an alphabetically
@@ -121,12 +126,22 @@ module HistoryFile
     def delegate_with_patched_filename(method, *args, &block)
       filename = args.slice!(0,1).first
       pf = prefixed_filename(filename)
+      create_prefix_subdir(method, pf)
       begin
         File.send(method, pf, *args, &block)
       rescue Errno::ENOENT => e
         raise e unless fallback = file_fallback(filename, pf)
         File.send(method, fallback, *args, &block)
       end
+    end
+
+    def create_prefix_subdir(method, filename)
+      return unless @subdir
+      return unless WRITING_METHODS.include?(method)
+      dir  = File.dirname(filename.to_s)
+      file = File.basename(filename.to_s)
+      return if Dir.exists?(dir)
+      File.mkdir(dir)
     end
 
     # Treats all arguments of the methods as files and prepends the 
