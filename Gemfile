@@ -20,5 +20,6 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'guard-bundler'
   gem 'guard-yard'
+  gem 'redcarpet'
   gem 'rb-fsevent'
 end
