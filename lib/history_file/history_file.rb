@@ -1,4 +1,4 @@
-# Behaves like a {File} class and does some convenience stuff
+# Behaves like a `File` class and does some convenience stuff
 # around a {HistoryFile::FileDelegator} instance. It all
 # revolves about defining a time offset. If however, you want
 # to access different versions of a file, use it like this:
@@ -30,7 +30,7 @@ module HistoryFile
   def self.[](offset)
     validate_offset(offset)
     fallback_glob = "[0-9][0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]-"
-    FileDelegator.new(prefix(offset), fallback_glob)
+    FileDelegator.new(prefix(offset), fallback_glob: fallback_glob)
   end
 
   private
