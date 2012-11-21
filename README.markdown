@@ -96,4 +96,4 @@ date if it does not exist already
 Tests
 -----
 We use simplecov and it reports 100% coverage.
-[![Build Status](https://travis-ci.org/jayniz/history_file.png)](https://travis-ci.org/jayniz/history_file?branch=master)
+[![Build Status](https://travis-ci.org/jayniz/history_file.png?branch=master)](https://travis-ci.org/jayniz/history_file?branch=master)
