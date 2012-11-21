@@ -90,8 +90,8 @@ If you set `HistoryFile.mode = :subdir` and you call one of the
 following methods, Historyfile will create a sub directory for the given
 date if it does not exist already
 
--- `new`
--- `open`
+- `new`
+- `open`
 
 Tests
 -----
