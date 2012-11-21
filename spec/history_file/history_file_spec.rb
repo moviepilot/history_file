@@ -20,6 +20,13 @@ describe HistoryFile::FileDelegator do
       }.to raise_error(ArgumentError, ":prefix needed")
     end
 
+    it "raises an exception if you try to set an invalid mode" do
+      expect{
+        HistoryFile.mode = :made_up
+      }.to raise_error(ArgumentError, "Mode must be :filename or :subdir")
+    end
+
+
     it "delegates generic methods to File directly" do
       File.should_receive(:split).with("/some/path")
       fd.split("/some/path")
