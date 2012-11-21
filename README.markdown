@@ -82,9 +82,18 @@ separator) or where one can't dumbly prefix filenames.
 
 Methods that add a prefix to the filename
 -----------------------------------------
-All other methods
+All methods not mentioned in the previous two sections
+
+Methods that automatically create a sub directory
+-------------------------------------------------
+If you set `HistoryFile.mode = :subdir` and you call one of the
+following methods, Historyfile will create a sub directory for the given
+date if it does not exist already
+
+-- `new`
+-- `open`
 
 Tests
 -----
 We use simplecov and it reports 100% coverage.
-[![Build Status](https://travis-ci.org/[jayniz]/[history_file].png)](https://travis-ci.org/[jayniz]/[history_file]?branch=master)
+[![Build Status](https://travis-ci.org/jayniz/history_file.png)](https://travis-ci.org/jayniz/history_file?branch=master)
