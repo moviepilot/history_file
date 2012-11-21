@@ -10,6 +10,10 @@ describe HistoryFile::FileDelegator do
       File.unlink("some_prefix-rspec_tmp_test.txt") rescue nil
     end
 
+    before(:each) do
+      HistoryFile.mode = :filename
+    end
+
     it "raises an exception if a :prefix is missing" do
       expect{
         HistoryFile::FileDelegator.new({})
@@ -43,14 +47,14 @@ describe HistoryFile::FileDelegator do
   end
 
   context "prefixing with sub directories" do
-    let(:sdfd){ HistoryFile::FileDelegator.new(prefix: "some_prefix", use_subdirectories: true) }
+    let(:sdfd){ HistoryFile::FileDelegator.new(prefix: "some_prefix", use_subdirs: true) }
 
     it "creates the right filename with a directory as a prefix" do
       sdfd.prefixed_filename('test').should == "./some_prefix/test"
     end
 
     it "attempts to create a directory" do
-      File.should_receive(:mkdir).with("./some_prefix")
+      Dir.should_receive(:mkdir).with("./some_prefix")
       File.should_receive(:open).with("./some_prefix/foo")
       sdfd.open("foo") do |io|
         io.write "don't"
@@ -63,6 +67,10 @@ end
 describe HistoryFile do
 
   context "writing and reading files" do
+    before(:each) do
+      HistoryFile.mode = :filename
+    end
+
     it "uses a correct prefix" do
       offset = Date.parse("1979-12-22")
       HistoryFile[offset].open("rspec_tmp_test.txt", "w") do |file|
@@ -79,33 +87,37 @@ describe HistoryFile do
     end
   end
 
-  context "falling back to older files" do
-    before(:all) do
-      [1,2,3,6,7].each do |i|
-        date = DateTime.now - i
-        HistoryFile[date].open("ht.txt", "w") do |file|
-          file.write "Day #{i}"
+  [:subdir, :filename].each do |mode|
+    HistoryFile.mode = mode
+    context "falling back to older files" do
+      before(:all) do
+        [1,2,3,6,7].each do |i|
+          date = DateTime.now - i
+          HistoryFile[date].open("ht.txt", "w") do |file|
+            file.write "Day #{i}"
+          end
         end
       end
-    end
 
-    after(:all) do
-      [1,2,3,6,7].each do |i|
-        date = DateTime.now - i
-        HistoryFile[date].unlink("ht.txt")
+      after(:all) do
+        [1,2,3,6,7].each do |i|
+          date = DateTime.now - i
+          HistoryFile[date].unlink("ht.txt")
+        end
+        Dir.unlink("some_prefix") rescue nil
       end
-    end
 
-    it "to yesterday's file" do
-      date = DateTime.now - 4
-      HistoryFile[date].read("ht.txt").should == "Day 6"
-    end
+      it "to yesterday's file" do
+        date = DateTime.now - 4
+        HistoryFile[date].read("ht.txt").should == "Day 6"
+      end
 
-    it "to an error if nothing older exists" do
-      expect{
-        date = DateTime.now - 8
-        HistoryFile[date].read("ht.txt")
-      }.to raise_error(Errno::ENOENT)
+      it "to an error if nothing older exists" do
+        expect{
+          date = DateTime.now - 8
+          HistoryFile[date].read("ht.txt")
+        }.to raise_error(Errno::ENOENT)
+      end
     end
   end
 end

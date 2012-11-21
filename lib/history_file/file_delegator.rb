@@ -79,7 +79,7 @@ module HistoryFile
     def initialize(opts)
       @prefix = opts[:prefix] or raise ArgumentError,":prefix needed"
       @fallback_glob = opts[:fallback_glob]
-      @subdir = opts[:use_subdirectories]
+      @subdir = opts[:use_subdirs]
     end
 
     # Either
@@ -138,10 +138,9 @@ module HistoryFile
     def create_prefix_subdir(method, filename)
       return unless @subdir
       return unless WRITING_METHODS.include?(method)
-      dir  = File.dirname(filename.to_s)
-      file = File.basename(filename.to_s)
+      dir = File.dirname(filename.to_s)
       return if Dir.exists?(dir)
-      File.mkdir(dir)
+      Dir.mkdir(dir)
     end
 
     # Treats all arguments of the methods as files and prepends the 

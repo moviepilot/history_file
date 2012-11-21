@@ -27,10 +27,19 @@
 #
 module HistoryFile
 
+  def self.mode=(mode)
+    return @mode = :filename if mode.to_sym == :filename
+    return @mode = :subdir   if mode.to_sym == :subdir
+    raise ArgumentError, "Mode must be :filename or :subdir"
+  end
+
   def self.[](offset)
     validate_offset(offset)
+    use_subdirs = @mode == :subdir
     fallback_glob = "[0-9][0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]-"
-    FileDelegator.new(prefix: prefix(offset), fallback_glob: fallback_glob)
+    FileDelegator.new(prefix: prefix(offset),
+                      fallback_glob: fallback_glob,
+                      use_subdirs: use_subdirs)
   end
 
   private
