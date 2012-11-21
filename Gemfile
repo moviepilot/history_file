@@ -12,6 +12,7 @@ group :development do
   gem "jeweler", "~> 1.8.4"
   gem "simplecov", ">= 0"
 end
+
 group :development, :test do
   gem 'webmock'
   gem 'rspec'
@@ -20,6 +21,9 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'guard-bundler'
   gem 'guard-yard'
-  gem 'redcarpet'
   gem 'rb-fsevent'
+end
+
+platform :ruby do
+  gem 'redcarpet'
 end
