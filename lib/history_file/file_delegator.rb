@@ -65,7 +65,7 @@ module HistoryFile
       :safe_unlink
     ]
 
-    WRITING_METHODS = [
+    POTENTIALLY_FILE_CREATING_METHODS = [
       :new,
       :open
     ]
@@ -135,9 +135,11 @@ module HistoryFile
       end
     end
 
+    # We just assume that #new and #open are used to create files and create
+    # sub directories for prefixes when in prefix mode.
     def create_prefix_subdir(method, filename)
       return unless @subdir
-      return unless WRITING_METHODS.include?(method)
+      return unless POTENTIALLY_FILE_CREATING_METHODS.include?(method)
       dir = File.dirname(filename.to_s)
       return if Dir.exists?(dir)
       Dir.mkdir(dir)
