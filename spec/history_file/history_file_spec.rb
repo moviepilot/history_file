@@ -94,14 +94,16 @@ describe HistoryFile do
     end
   end
 
+  # We run these tests twice
   [:subdir, :filename].each do |mode|
+
     HistoryFile.mode = mode
     context "falling back to older files" do
       before(:all) do
         [1,2,3,6,7].each do |i|
           date = DateTime.now - i
           HistoryFile[date].open("ht.txt", "w") do |file|
-            file.write "Day #{i}"
+            file.write "Day #{i} #{mode}"
           end
         end
       end
@@ -116,7 +118,7 @@ describe HistoryFile do
 
       it "to yesterday's file" do
         date = DateTime.now - 4
-        HistoryFile[date].read("ht.txt").should == "Day 6"
+        HistoryFile[date].read("ht.txt").should == "Day 6 #{mode}"
       end
 
       it "to an error if nothing older exists" do
