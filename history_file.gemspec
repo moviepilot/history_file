@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     ".document",
     ".rvmrc",
     ".travis.yml",
+    "CHANGELOG.markdown",
     "Gemfile",
     "Gemfile.lock",
     "Guardfile",
