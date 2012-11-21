@@ -1,7 +1,7 @@
 module HistoryFile
-  # This class delegates all method calls to the {File} class.
+  # This class delegates all method calls to the `File` class.
   # The generic methods that don't revolve around one specific
-  # file, {File.join} for example, are just passed on. These
+  # file, `File.join` for example, are just passed on. These
   # methods are defined in
   # {HistoryFile::FileDelegator::EXCLUDED_METHODS}.
   #
@@ -16,7 +16,7 @@ module HistoryFile
   #     > puts fd.read("/path/to/my_file.txt")
   #     => hello there
   #
-  # This will pass on your block to {File.open}, but with a
+  # This will pass on your block to `File.open`, but with a
   # prefixed the filename. So what's really called is:
   #
   #     File.open("/path/to/some_prefix-my_file.txt")
@@ -65,15 +65,21 @@ module HistoryFile
       :safe_unlink
     ]
 
+    POTENTIALLY_FILE_CREATING_METHODS = [
+      :new,
+      :open
+    ]
+
     # @param prefix [String] The prefix for all methods that revolve around
     #   filenames
-    # @param fallback_glob [String] If you want to fall back to an alphabetically
-    #   smaller file on Errno::ENOENT, you can supply a fallback glob here. It
-    #   will be used with {Dir.glob} to find all candidates (so this should match
+    # @param fallback_glob [Hash] If you want to fall back to an alphabetically
+    #   smaller file on Errno::ENOENT, you can supply a :fallback_glob here. It
+    #   will be used with `Dir.glob` to find all candidates (so this should match
     #   all prefixes)
-    def initialize(prefix, fallback_glob = nil)
-      @prefix = prefix
-      @fallback_glob = fallback_glob
+    def initialize(opts)
+      @prefix = opts[:prefix] or raise ArgumentError,":prefix needed"
+      @fallback_glob = opts[:fallback_glob]
+      @subdir = opts[:use_subdirs]
     end
 
     # Either
@@ -95,7 +101,11 @@ module HistoryFile
     def prefixed_filename(f)
       dir  = File.dirname(f.to_s)
       file = File.basename(f.to_s)
-      File.join(dir, "#{@prefix}-#{file}")
+      if @subdir
+        File.join(dir, @prefix, file)
+      else
+        File.join(dir, "#{@prefix}-#{file}")
+      end
     end
 
     private
@@ -116,12 +126,23 @@ module HistoryFile
     def delegate_with_patched_filename(method, *args, &block)
       filename = args.slice!(0,1).first
       pf = prefixed_filename(filename)
+      create_prefix_subdir(method, pf)
       begin
         File.send(method, pf, *args, &block)
       rescue Errno::ENOENT => e
         raise e unless fallback = file_fallback(filename, pf)
         File.send(method, fallback, *args, &block)
       end
+    end
+
+    # We just assume that #new and #open are used to create files and create
+    # sub directories for prefixes when in prefix mode.
+    def create_prefix_subdir(method, filename)
+      return unless @subdir
+      return unless POTENTIALLY_FILE_CREATING_METHODS.include?(method)
+      dir = File.dirname(filename.to_s)
+      return if Dir.exists?(dir)
+      Dir.mkdir(dir)
     end
 
     # Treats all arguments of the methods as files and prepends the 
