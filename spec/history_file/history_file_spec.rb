@@ -98,7 +98,7 @@ describe HistoryFile do
   [:subdir, :filename].each do |mode|
 
     HistoryFile.mode = mode
-    context "falling back to older files" do
+    context "falling back to older files in #{mode} mode" do
       before(:all) do
         [1,2,3,6,7].each do |i|
           date = DateTime.now - i
