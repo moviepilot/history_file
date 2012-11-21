@@ -83,3 +83,8 @@ separator) or where one can't dumbly prefix filenames.
 Methods that add a prefix to the filename
 -----------------------------------------
 All other methods
+
+Tests
+-----
+We use simplecov and it reports 100% coverage.
+[![Build Status](https://travis-ci.org/[jayniz]/[history_file].png)](https://travis-ci.org/[jayniz]/[history_file]?branch=master)
