@@ -97,36 +97,43 @@ describe HistoryFile do
   # We run these tests twice
   [:subdir, :filename].each do |mode|
 
-    HistoryFile.mode = mode
     context "falling back to older files in #{mode} mode" do
-      before(:all) do
-        [1,2,3,6,7].each do |i|
+      it "sets up things correctly" do
+        HistoryFile.mode = mode
+        [2,3,6,7,8].each do |i|
           date = DateTime.now - i
-          HistoryFile[date].open("ht.txt", "w") do |file|
+          HistoryFile[date].open("ht_#{mode}.txt", "w") do |file|
             file.write "Day #{i} #{mode}"
           end
         end
       end
 
-      after(:all) do
-        [1,2,3,6,7].each do |i|
-          date = DateTime.now - i
-          HistoryFile[date].unlink("ht.txt")
-        end
-        Dir.unlink("some_prefix") rescue nil
-      end
-
-      it "to yesterday's file" do
+      it "to a four days old file" do
+        HistoryFile.mode = mode
         date = DateTime.now - 4
-        HistoryFile[date].read("ht.txt").should == "Day 6 #{mode}"
+        HistoryFile[date].read("ht_#{mode}.txt").should == "Day 6 #{mode}"
       end
 
       it "to an error if nothing older exists" do
+        HistoryFile.mode = mode
         expect{
-          date = DateTime.now - 8
-          HistoryFile[date].read("ht.txt")
+          date = DateTime.now - 9
+          HistoryFile[date].read("ht_#{mode}.txt")
         }.to raise_error(Errno::ENOENT)
       end
+
+      it "removes stuff we assumed we created" do
+        HistoryFile.mode = mode
+        [2,3,6,7,8].each do |i|
+          date = DateTime.now - i
+          HistoryFile[date].unlink("ht_#{mode}.txt")
+          if mode == :subdir
+            dir = File.dirname(HistoryFile[date].prefixed_filename("ht_#{mode}.txt"))
+            Dir.unlink(dir)
+          end
+        end
+      end
+
     end
   end
 end

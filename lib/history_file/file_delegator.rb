@@ -114,7 +114,11 @@ module HistoryFile
       return false unless @fallback_glob
       dir   = File.dirname(original_filename.to_s)
       file  = File.basename(original_filename.to_s)
-      glob  = File.join(dir, @fallback_glob+file)
+      if @subdir
+        glob = File.join(dir, @fallback_glob, file)
+      else
+        glob  = File.join(dir, "#{@fallback_glob}-#{file}")
+      end
       candidates = Dir[glob].sort.select do |c|
         c < target_filename
       end.last
