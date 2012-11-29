@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "history_file"
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jannis Hermanns"]
-  s.date = "2012-11-21"
+  s.date = "2012-11-29"
   s.description = "A File like class that supports versioning by date and has a fallback to older files"
   s.email = "jannis@moviepilot.com"
   s.extra_rdoc_files = [
