@@ -36,7 +36,7 @@ module HistoryFile
   def self.[](offset)
     validate_offset(offset)
     use_subdirs = @mode == :subdir
-    fallback_glob = "[0-9][0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]-"
+    fallback_glob = "[0-9][0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]"
     FileDelegator.new(prefix: prefix(offset),
                       fallback_glob: fallback_glob,
                       use_subdirs: use_subdirs)
